@@ -1,0 +1,391 @@
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* App Layout */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 32px;
+}
+
+.app-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: 18px;
+  color: #666;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.app-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.app-subtitle {
+  font-size: 14px;
+  color: #8a8a9a;
+  margin-top: 4px;
+}
+
+.app-main {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* Calendar Card */
+.calendar-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  flex: 1;
+  min-width: 0;
+}
+
+/* Month Navigator */
+.month-navigator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.month-title {
+  font-size: 20px;
+  font-weight: 600;
+  min-width: 180px;
+  text-align: center;
+}
+
+.nav-button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.nav-button:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+/* Status Legend */
+.status-legend {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #666;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.legend-home-office {
+  background: #f0f4f8;
+  border: 1px solid #d0d8e0;
+}
+
+.legend-on-site {
+  background: #4a7dff;
+}
+
+.legend-absent {
+  background: #f5a623;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.day-header {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8a8a9a;
+  padding: 4px;
+  text-transform: uppercase;
+}
+
+.calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+/* Day Cell */
+.day-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: default;
+  transition: all 0.15s ease;
+  min-height: 48px;
+}
+
+.day-cell.status-home-office {
+  background: #f0f4f8;
+  color: #4a5568;
+  cursor: pointer;
+}
+
+.day-cell.status-home-office:hover {
+  background: #e2e8f0;
+}
+
+.day-cell.status-on-site {
+  background: #4a7dff;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(74, 125, 255, 0.3);
+}
+
+.day-cell.status-on-site:hover {
+  background: #3a6dee;
+}
+
+.day-cell.status-absent {
+  background: #f5a623;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(245, 166, 35, 0.3);
+}
+
+.day-cell.status-absent:hover {
+  background: #e09515;
+}
+
+.day-cell.weekend {
+  background: #f8f9fa;
+  color: #c0c0c0;
+}
+
+.day-cell.holiday {
+  background: #fef3f3;
+  color: #e57373;
+  font-style: italic;
+}
+
+.day-cell.adjacent {
+  background: transparent;
+  color: #d0d0d0;
+}
+
+.day-number {
+  line-height: 1;
+}
+
+/* Overview Card */
+.overview-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.overview-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Goal Indicator */
+.goal-indicator {
+  margin-bottom: 20px;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.goal-indicator.goal-met {
+  background: #f0faf0;
+}
+
+.goal-indicator.goal-not-met {
+  background: #fff8f0;
+}
+
+.goal-percentage {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.goal-met .goal-percentage {
+  color: #2ecc71;
+}
+
+.goal-not-met .goal-percentage {
+  color: #e67e22;
+}
+
+.goal-label {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.goal-bar-track {
+  height: 8px;
+  background: #e8e8e8;
+  border-radius: 4px;
+  position: relative;
+  overflow: visible;
+}
+
+.goal-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.goal-met .goal-bar-fill {
+  background: #2ecc71;
+}
+
+.goal-not-met .goal-bar-fill {
+  background: #e67e22;
+}
+
+.goal-bar-target {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 14px;
+  background: #555;
+  border-radius: 1px;
+}
+
+.goal-threshold-label {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 6px;
+}
+
+/* Overview Stats */
+.overview-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-row.stat-detail {
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.stat-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.on-site-icon {
+  background: #4a7dff;
+}
+
+.home-office-icon {
+  background: #f0f4f8;
+  border: 1px solid #d0d8e0;
+}
+
+.absent-icon {
+  background: #f5a623;
+}
+
+.stat-count {
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 24px;
+}
+
+.stat-desc {
+  font-size: 13px;
+  color: #888;
+}
+
+.stat-divider {
+  height: 1px;
+  background: #eee;
+  margin: 4px 0;
+}
+
+.stat-total {
+  margin-top: 2px;
+}

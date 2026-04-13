@@ -1,0 +1,43 @@
+{
+  "name": "office-presence-tracker",
+  "version": "1.0.0",
+  "description": "Plan your office and home-office days",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.7.0",
+    "electron": "^41.2.0",
+    "electron-builder": "^26.8.1",
+    "electron-vite": "^5.0.0",
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.4"
+  },
+  "build": {
+    "appId": "dev.evodicka.office-presence-tracker",
+    "productName": "Office Presence Tracker",
+    "files": [
+      "out/**/*"
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

@@ -61,6 +61,8 @@ Registers IPC listeners (`ipcMain.handle`) for two channels:
 - `load-data` — reads the JSON file from `app.getPath('userData')/presence-data.json`; returns an empty object if the file does not exist
 - `save-data` — receives the full sparse data object from the renderer and writes it asynchronously to disk
 
+The pure I/O functions (`loadData`, `saveData`) are extracted into a separate `persistence.ts` module that accepts a file path parameter. This keeps them free of Electron imports, allowing direct unit testing against the production code without mocking Electron APIs. `main/index.ts` wires these functions to the IPC handlers and supplies the Electron-derived file path via `app.getPath('userData')`.
+
 ### Renderer Process
 
 #### App
