@@ -1,0 +1,1 @@
+The ultimate goal of the tool is to provide the user with a simple and intuitive way to plan which which days of the current and following month he will spent in the office to reach the "40% of the working time must be spent on site".
