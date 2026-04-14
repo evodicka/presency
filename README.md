@@ -40,8 +40,27 @@ This launches the Electron app with hot module replacement for the renderer.
 
 ### Run Tests
 
+The project has two separate test suites with enforced coverage gates:
+
+**Unit tests** — services, persistence, and UI component logic. Requires ≥ 90% coverage on the measured files.
+
 ```bash
-npm run test
+npm test
+```
+
+**Renderer integration tests** — renders the full `App` component in a jsdom environment (via React Testing Library) with a mocked `presenceAPI`. Covers end-to-end data flows: load + validation, status cycling (sparse persistence model), and month navigation. Requires ≥ 80% coverage on the renderer source.
+
+```bash
+npm run test:integration
+```
+
+Test files live under `src/**/__tests__/` (unit) and `src/**/__integration__/` (integration). Both suites use [vitest](https://vitest.dev/); each has its own config (`vitest.config.ts` and `vitest.integration.config.ts`).
+
+To run with a coverage report:
+
+```bash
+npm test -- --coverage
+npm run test:integration -- --coverage
 ```
 
 ### Build for Production
