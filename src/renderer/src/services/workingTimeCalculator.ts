@@ -1,5 +1,8 @@
 import type { DayStatus, MonthStats } from '../types'
 
+export const GOAL_THRESHOLD_PERCENT = 40
+export const HOURS_PER_WORKING_DAY = 8
+
 export function calculateMonthStats(
   year: number,
   month: number, // 1-indexed: 1 = January
@@ -45,13 +48,21 @@ export function calculateMonthStats(
   const onSitePercentage = effectiveDays > 0 ? (onSiteDays / effectiveDays) * 100 : 0
   const homeOfficePercentage = effectiveDays > 0 ? (homeOfficeDays / effectiveDays) * 100 : 0
 
+  const onSiteHours = onSiteDays * HOURS_PER_WORKING_DAY
+  const targetOnSiteHours =
+    (GOAL_THRESHOLD_PERCENT / 100) * effectiveDays * HOURS_PER_WORKING_DAY
+  const hoursToGoal = Math.max(0, targetOnSiteHours - onSiteHours)
+
   return {
     totalWorkingDays,
-    totalWorkingHours: totalWorkingDays * 8,
+    totalWorkingHours: totalWorkingDays * HOURS_PER_WORKING_DAY,
     onSiteDays,
     homeOfficeDays,
     absentDays,
     onSitePercentage,
-    homeOfficePercentage
+    homeOfficePercentage,
+    onSiteHours,
+    targetOnSiteHours,
+    hoursToGoal
   }
 }

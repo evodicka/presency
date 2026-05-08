@@ -8,4 +8,7 @@ export interface MonthStats {
   absentDays: number
   onSitePercentage: number
   homeOfficePercentage: number
+  onSiteHours: number
+  targetOnSiteHours: number
+  hoursToGoal: number
 }

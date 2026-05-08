@@ -10,7 +10,12 @@ function MonthlyOverviewPanel({ stats }: MonthlyOverviewPanelProps): JSX.Element
     <div className="overview-card">
       <h2 className="overview-title">Monthly Overview</h2>
 
-      <GoalIndicator onSitePercentage={stats.onSitePercentage} />
+      <GoalIndicator
+        onSitePercentage={stats.onSitePercentage}
+        onSiteHours={stats.onSiteHours}
+        targetOnSiteHours={stats.targetOnSiteHours}
+        hoursToGoal={stats.hoursToGoal}
+      />
 
       <div className="overview-stats">
         <div className="stat-row">

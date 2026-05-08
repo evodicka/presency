@@ -1,12 +1,25 @@
-const GOAL_THRESHOLD_PERCENT = 40
+import { GOAL_THRESHOLD_PERCENT } from '../services/workingTimeCalculator'
 
 interface GoalIndicatorProps {
   onSitePercentage: number
+  onSiteHours: number
+  targetOnSiteHours: number
+  hoursToGoal: number
 }
 
-function GoalIndicator({ onSitePercentage }: GoalIndicatorProps): JSX.Element {
+function formatHours(hours: number): string {
+  return `${hours.toFixed(1).replace(/\.0$/, '')}h`
+}
+
+function GoalIndicator({
+  onSitePercentage,
+  onSiteHours,
+  targetOnSiteHours,
+  hoursToGoal
+}: GoalIndicatorProps): JSX.Element {
   const meetsGoal = onSitePercentage >= GOAL_THRESHOLD_PERCENT
   const colorClass = meetsGoal ? 'goal-met' : 'goal-not-met'
+  const hasEffectiveDays = targetOnSiteHours > 0 || onSiteHours > 0
 
   return (
     <div className={`goal-indicator ${colorClass}`}>
@@ -20,6 +33,18 @@ function GoalIndicator({ onSitePercentage }: GoalIndicatorProps): JSX.Element {
         <div className="goal-bar-target" style={{ left: `${GOAL_THRESHOLD_PERCENT}%` }} />
       </div>
       <div className="goal-threshold-label">{GOAL_THRESHOLD_PERCENT}% goal</div>
+      {hasEffectiveDays ? (
+        <>
+          <div className="goal-hours-summary">
+            {formatHours(onSiteHours)} of {formatHours(targetOnSiteHours)} on-site
+          </div>
+          <div className="goal-hours-delta">
+            {meetsGoal ? 'Goal met' : `${formatHours(hoursToGoal)} to goal`}
+          </div>
+        </>
+      ) : (
+        <div className="goal-hours-summary goal-hours-empty">—</div>
+      )}
     </div>
   )
 }

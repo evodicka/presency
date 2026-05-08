@@ -131,4 +131,118 @@ describe('calculateMonthStats', () => {
     expect(stats.onSiteDays).toBe(0)
     expect(stats.absentDays).toBe(0)
   })
+
+  // Hours-to-goal: 30% on 10 effective days → target 4 days/32h, hoursToGoal 8h
+  it('reports onSiteHours, targetOnSiteHours, and hoursToGoal when below the goal', () => {
+    // February 2026: 20 weekdays. 3 on-site, 10 absent → 7 home-office, 10 effective.
+    const statuses: Record<string, DayStatus> = {
+      '2026-02-02': 'on-site',
+      '2026-02-03': 'on-site',
+      '2026-02-04': 'on-site',
+      '2026-02-05': 'absent',
+      '2026-02-06': 'absent',
+      '2026-02-09': 'absent',
+      '2026-02-10': 'absent',
+      '2026-02-11': 'absent',
+      '2026-02-12': 'absent',
+      '2026-02-13': 'absent',
+      '2026-02-16': 'absent',
+      '2026-02-17': 'absent',
+      '2026-02-18': 'absent'
+    }
+    const stats = calculateMonthStats(2026, 2, statuses, new Set())
+    expect(stats.onSiteDays).toBe(3)
+    expect(stats.homeOfficeDays).toBe(7)
+    expect(stats.absentDays).toBe(10)
+    expect(stats.onSitePercentage).toBe(30)
+    expect(stats.onSiteHours).toBe(24)
+    expect(stats.targetOnSiteHours).toBe(32) // 0.4 * 10 * 8
+    expect(stats.hoursToGoal).toBe(8)
+  })
+
+  it('reports a fractional target when 40% does not land on a whole day', () => {
+    // February 2026: 20 weekdays. 2 on-site, 13 absent → 5 home-office, 7 effective.
+    // Target: 0.4 * 7 * 8 = 22.4h. Current: 16h. hoursToGoal: 6.4h.
+    const statuses: Record<string, DayStatus> = {
+      '2026-02-02': 'on-site',
+      '2026-02-03': 'on-site',
+      '2026-02-04': 'absent',
+      '2026-02-05': 'absent',
+      '2026-02-06': 'absent',
+      '2026-02-09': 'absent',
+      '2026-02-10': 'absent',
+      '2026-02-11': 'absent',
+      '2026-02-12': 'absent',
+      '2026-02-13': 'absent',
+      '2026-02-16': 'absent',
+      '2026-02-17': 'absent',
+      '2026-02-18': 'absent',
+      '2026-02-19': 'absent',
+      '2026-02-20': 'absent'
+    }
+    const stats = calculateMonthStats(2026, 2, statuses, new Set())
+    expect(stats.onSiteDays).toBe(2)
+    expect(stats.homeOfficeDays).toBe(5)
+    expect(stats.absentDays).toBe(13)
+    expect(stats.onSiteHours).toBe(16)
+    expect(stats.targetOnSiteHours).toBeCloseTo(22.4, 5)
+    expect(stats.hoursToGoal).toBeCloseTo(6.4, 5)
+  })
+
+  it('clamps hoursToGoal to 0 once the goal is exceeded', () => {
+    // Same setup as the on-site percentage test above:
+    // 10 on-site, 9 home-office, 1 absent → 19 effective, 52.6%.
+    // Target: 0.4 * 19 * 8 = 60.8h. Current: 80h. hoursToGoal: 0.
+    const statuses: Record<string, DayStatus> = {
+      '2026-02-02': 'on-site',
+      '2026-02-03': 'on-site',
+      '2026-02-04': 'on-site',
+      '2026-02-05': 'on-site',
+      '2026-02-06': 'on-site',
+      '2026-02-09': 'on-site',
+      '2026-02-10': 'on-site',
+      '2026-02-11': 'on-site',
+      '2026-02-12': 'on-site',
+      '2026-02-13': 'on-site',
+      '2026-02-16': 'absent'
+    }
+    const stats = calculateMonthStats(2026, 2, statuses, new Set())
+    expect(stats.onSiteHours).toBe(80)
+    expect(stats.targetOnSiteHours).toBeCloseTo(60.8, 5)
+    expect(stats.hoursToGoal).toBe(0)
+  })
+
+  it('reports a 44.8h target for 14 effective days (112 working hours)', () => {
+    // March 2026: 22 weekdays, no holidays. Mark 8 weekdays absent so 14 remain effective.
+    // Target: 0.4 * 14 * 8 = 44.8h.
+    const statuses: Record<string, DayStatus> = {
+      '2026-03-02': 'absent',
+      '2026-03-03': 'absent',
+      '2026-03-04': 'absent',
+      '2026-03-05': 'absent',
+      '2026-03-06': 'absent',
+      '2026-03-09': 'absent',
+      '2026-03-10': 'absent',
+      '2026-03-11': 'absent'
+    }
+    const stats = calculateMonthStats(2026, 3, statuses, new Set())
+    const effectiveDays = stats.onSiteDays + stats.homeOfficeDays
+    expect(effectiveDays).toBe(14)
+    expect(stats.targetOnSiteHours).toBeCloseTo(44.8, 5)
+  })
+
+  it('returns zero hour fields when there are no effective days', () => {
+    // All weekdays of February 2026 marked absent → effectiveDays = 0.
+    const statuses: Record<string, DayStatus> = {}
+    for (let d = 1; d <= 28; d++) {
+      const date = new Date(2026, 1, d)
+      if (date.getDay() !== 0 && date.getDay() !== 6) {
+        statuses[`2026-02-${String(d).padStart(2, '0')}`] = 'absent'
+      }
+    }
+    const stats = calculateMonthStats(2026, 2, statuses, new Set())
+    expect(stats.onSiteHours).toBe(0)
+    expect(stats.targetOnSiteHours).toBe(0)
+    expect(stats.hoursToGoal).toBe(0)
+  })
 })
