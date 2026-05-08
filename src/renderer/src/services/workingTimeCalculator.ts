@@ -47,7 +47,7 @@ export function calculateMonthStats(
 
   return {
     totalWorkingDays,
-    totalWorkingHours: (onSiteDays + homeOfficeDays) * 8,
+    totalWorkingHours: totalWorkingDays * 8,
     onSiteDays,
     homeOfficeDays,
     absentDays,

@@ -29,7 +29,7 @@ describe('calculateMonthStats', () => {
     // 22 weekdays - 1 holiday = 21 total working days
     // 2 absent days -> 19 effective working days
     expect(stats.totalWorkingDays).toBe(21)
-    expect(stats.totalWorkingHours).toBe(152) // (22 - 1 - 2) * 8 = 19 * 8
+    expect(stats.totalWorkingHours).toBe(168) // (22 - 1) * 8 = 21 * 8
     expect(stats.absentDays).toBe(2)
     expect(stats.homeOfficeDays).toBe(19)
   })
