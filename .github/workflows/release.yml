@@ -1,15 +1,52 @@
 name: Release
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
+  verify-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tag matches package.json version
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          PKG="v$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "Tag $TAG does not match package.json version $PKG" >&2
+            exit 1
+          fi
+
   test:
+    needs: [verify-version]
     uses: ./.github/workflows/test.yml
 
-  build:
+  create-release:
     needs: [test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create draft GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PRERELEASE_FLAG=""
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes \
+            --draft \
+            $PRERELEASE_FLAG
+
+  build:
+    needs: [create-release]
     strategy:
       matrix:
         include:
@@ -45,16 +82,15 @@ jobs:
       - name: Upload artifact to release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload ${{ github.event.release.tag_name }} ${{ matrix.artifact_glob }}
+        run: gh release upload ${{ github.ref_name }} ${{ matrix.artifact_glob }} --repo ${{ github.repository }}
 
-  publish:
+  publish-release:
     needs: [build]
-    if: ${{ github.event.release.draft == true }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Publish draft release
+      - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release edit ${{ github.event.release.tag_name }} --draft=false --repo ${{ github.repository }}
+        run: gh release edit ${{ github.ref_name }} --draft=false --repo ${{ github.repository }}

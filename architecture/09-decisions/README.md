@@ -12,3 +12,4 @@
 | [ADR-006](adr-006-business-logic-in-renderer.md) | Business Logic in Renderer Process | Proposed | 2026-04-10 |
 | [ADR-007](adr-007-computus-easter-algorithm.md) | Inline Computus Algorithm for Easter | Proposed | 2026-04-10 |
 | [ADR-008](adr-008-electron-vite-build-toolchain.md) | electron-vite as Build Toolchain | Proposed | 2026-04-10 |
+| [ADR-009](adr-009-tag-driven-release-versioning.md) | Tag-Driven Release Versioning | Accepted | 2026-05-08 |
