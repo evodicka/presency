@@ -58,6 +58,16 @@ body {
   min-height: 0;
 }
 
+.app-footer {
+  width: 100%;
+  max-width: 1100px;
+  text-align: right;
+  padding-top: 8px;
+  font-size: 11px;
+  color: #b0b0b8;
+  flex-shrink: 0;
+}
+
 /* Calendar Card */
 .calendar-card {
   background: #fff;

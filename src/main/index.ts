@@ -42,6 +42,8 @@ app.whenReady().then(() => {
     await saveData(getDataPath(), data)
   })
 
+  ipcMain.handle('get-version', () => app.getVersion())
+
   if (process.platform === 'darwin' && !app.isPackaged) {
     app.dock?.setIcon(getIconPath())
   }

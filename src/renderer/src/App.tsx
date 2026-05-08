@@ -16,6 +16,7 @@ function App(): JSX.Element {
   })
   const [dayStatuses, setDayStatuses] = useState<Record<string, DayStatus>>({})
   const [loaded, setLoaded] = useState(false)
+  const [version, setVersion] = useState('')
 
   // Load persisted data on mount
   useEffect(() => {
@@ -31,6 +32,12 @@ function App(): JSX.Element {
     }).catch((err) => {
       console.error('Failed to load data:', err)
       setLoaded(true)
+    })
+  }, [])
+
+  useEffect(() => {
+    window.presenceAPI.getVersion().then(setVersion).catch((err) => {
+      console.error('Failed to load version:', err)
     })
   }, [])
 
@@ -103,6 +110,7 @@ function App(): JSX.Element {
         />
         <MonthlyOverviewPanel stats={stats} />
       </main>
+      {version && <footer className="app-footer">v{version}</footer>}
     </div>
   )
 }

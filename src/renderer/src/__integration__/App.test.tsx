@@ -5,6 +5,7 @@ import App from '../App'
 type PresenceAPI = {
   loadData: ReturnType<typeof vi.fn>
   saveData: ReturnType<typeof vi.fn>
+  getVersion: ReturnType<typeof vi.fn>
 }
 
 afterEach(() => {
@@ -20,8 +21,9 @@ function mockPresenceAPI(
     ? vi.fn().mockRejectedValue(new Error('load failed'))
     : vi.fn().mockResolvedValue(loadResult)
   const saveData = vi.fn().mockResolvedValue(undefined)
-  ;(window as unknown as { presenceAPI: PresenceAPI }).presenceAPI = { loadData, saveData }
-  return { loadData, saveData }
+  const getVersion = vi.fn().mockResolvedValue('0.0.1')
+  ;(window as unknown as { presenceAPI: PresenceAPI }).presenceAPI = { loadData, saveData, getVersion }
+  return { loadData, saveData, getVersion }
 }
 
 async function renderAppAt(year: number, month: number): Promise<void> {
