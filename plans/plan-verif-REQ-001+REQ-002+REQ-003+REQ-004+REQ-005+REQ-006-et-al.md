@@ -2,7 +2,7 @@
 
 **Date:** 2026-04-09
 **Requirements covered:** REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-009
-**Application:** Work Hour Planning — Electron desktop application for Bavarian office presence tracking
+**Application:** Presency — Hybrid Work Planner — Electron desktop application for Bavarian office presence tracking
 
 ---
 

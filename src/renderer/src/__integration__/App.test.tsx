@@ -38,14 +38,14 @@ describe('App integration', () => {
   it('shows main UI after loadData resolves', async () => {
     mockPresenceAPI()
     render(<App />)
-    await waitFor(() => screen.getByText('Presence Planner'))
+    await waitFor(() => screen.getByText('Presency'))
     expect(screen.queryByText('Loading...')).toBeNull()
   })
 
   it('renders main UI even when loadData rejects', async () => {
     mockPresenceAPI({}, { loadFails: true })
     render(<App />)
-    await waitFor(() => screen.getByText('Presence Planner'))
+    await waitFor(() => screen.getByText('Presency'))
   })
 
   it('filters out invalid status values from loaded data', async () => {

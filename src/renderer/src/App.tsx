@@ -88,8 +88,8 @@ function App(): JSX.Element {
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-title">Presence Planner</h1>
-        <p className="app-subtitle">Plan your office and home-office days</p>
+        <h1 className="app-title">Presency</h1>
+        <p className="app-subtitle">Hybrid Work Planner</p>
       </header>
       <main className="app-main">
         <CalendarView

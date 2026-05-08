@@ -1,4 +1,4 @@
-# Office Presence Tracker
+# Presency — Hybrid Work Planner
 
 A desktop application for planning your office and home-office days. Track your planned presence across months, see working time statistics at a glance, and ensure you meet the 40% on-site presence goal.
 

@@ -1,8 +1,8 @@
-# Architecture Documentation — Office Presence Tracker
+# Architecture Documentation — Presency — Hybrid Work Planner
 
 > **Status: Draft** — This architecture is based on requirements and has not yet been implemented.
 
-The Office Presence Tracker is a self-contained Electron desktop application that lets a single user plan their monthly office presence. Users click on calendar day cells to set a planned status (home-office, on-site, absent), and the application continuously calculates whether the 40% on-site presence goal is met. All data is stored locally as a JSON file; no network connectivity or external server is required.
+Presency is a self-contained Electron desktop application that lets a single user plan their monthly office presence. Users click on calendar day cells to set a planned status (home-office, on-site, absent), and the application continuously calculates whether the 40% on-site presence goal is met. All data is stored locally as a JSON file; no network connectivity or external server is required.
 
 ## Sections
 

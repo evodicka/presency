@@ -2,7 +2,7 @@
 
 ## System Boundary
 
-The Office Presence Tracker is entirely self-contained. It has no integration with external APIs, authentication providers, calendar services, or HR systems. Its only external interactions are:
+Presency is entirely self-contained. It has no integration with external APIs, authentication providers, calendar services, or HR systems. Its only external interactions are:
 
 - **The user** — who navigates months and clicks day cells
 - **The local file system** — where the application reads and writes the planning data JSON file
@@ -10,7 +10,7 @@ The Office Presence Tracker is entirely self-contained. It has no integration wi
 ```mermaid
 graph LR
     User(["👤 User"])
-    App["Office Presence Tracker\n(Electron Desktop App)"]
+    App["Presency\nHybrid Work Planner\n(Electron Desktop App)"]
     FS[("Local File System\n~/.../userData/presence-data.json")]
 
     User -- "navigates months,\nclicks day cells" --> App

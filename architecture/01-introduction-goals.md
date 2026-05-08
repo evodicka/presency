@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Office Presence Tracker is a personal desktop planning tool. Its sole purpose is to help a single user plan which working days of each month they intend to spend on-site, so they can verify that their plan meets the company's 40% on-site presence requirement. All statuses represent *planned intent*, not confirmed actuals.
+Presency — Hybrid Work Planner is a personal desktop planning tool. Its sole purpose is to help a single user plan which working days of each month they intend to spend on-site, so they can verify that their plan meets the company's 40% on-site presence requirement. All statuses represent *planned intent*, not confirmed actuals.
 
 ## Key Requirements
 

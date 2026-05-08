@@ -2,7 +2,7 @@
 
 ## Runtime Environment
 
-The Office Presence Tracker is a standalone Electron application. There is no server component. The entire application runs on the user's machine as a single desktop process (with Electron's inherent main + renderer sub-processes).
+Presency is a standalone Electron application. There is no server component. The entire application runs on the user's machine as a single desktop process (with Electron's inherent main + renderer sub-processes).
 
 ```mermaid
 graph LR
@@ -62,7 +62,7 @@ The `electron-builder` configuration (in `package.json` or a dedicated config fi
 
 | Key | Purpose |
 |-----|---------|
-| `appId` | Unique application identifier (e.g., `com.example.office-presence-tracker`) |
+| `appId` | Unique application identifier (e.g., `dev.evodicka.presency`) |
 | `productName` | Human-readable name; anchors the `userData` path (`<AppName>`) on all platforms |
 | `files` | Glob pattern(s) selecting which output files to include in the package |
 | `mac` / `win` / `linux` | Platform-specific target formats (e.g., `dmg`, `nsis`, `AppImage`) |

@@ -1,4 +1,4 @@
-# Office Presence Tracker -- Requirements Document
+# Presency — Hybrid Work Planner — Requirements Document
 
 *Note: This tool is a planning tool. All day statuses (home-office, on-site, absent) represent planned intent, not confirmed actuals. Calculations and indicators reflect the user's plan for the month, not a record of what has occurred.*
 
