@@ -66,20 +66,21 @@ npm run test:integration -- --coverage
 ### Build for Production
 
 ```bash
-npm run build
+npm run dist
 ```
 
-This compiles the application via electron-vite into the `out/` directory.
+This runs the full release pipeline in order:
+1. `build:icons` — converts `resources/icon.png` into platform-specific formats (`build/icon.icns`, `build/icon.ico`, `build/icons/`)
+2. `build` — compiles the application via electron-vite into `out/`
+3. `electron-builder` — packages for the current platform
 
-### Package Platform-Specific Binaries
+### Package for a Specific Platform
 
-After building, use electron-builder to produce distributable binaries:
+When targeting a platform other than your current OS, run the three steps manually and pass the platform flag to electron-builder:
 
 ```bash
-# Package for the current platform
-npx electron-builder
-
-# Package for a specific platform
+npm run build:icons
+npm run build
 npx electron-builder --mac          # macOS → .dmg containing .app bundle
 npx electron-builder --win          # Windows → .exe installer (NSIS)
 npx electron-builder --linux        # Linux → AppImage

@@ -35,6 +35,8 @@ jobs:
 
       - run: npm ci
 
+      - run: npm run build:icons
+
       - run: npm run build
 
       - name: Package with electron-builder

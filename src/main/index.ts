@@ -6,12 +6,19 @@ function getDataPath(): string {
   return join(app.getPath('userData'), 'presence-data.json')
 }
 
+function getIconPath(): string {
+  return app.isPackaged
+    ? join(process.resourcesPath, 'icon.png')
+    : join(app.getAppPath(), 'resources/icon.png')
+}
+
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     minWidth: 1280,
     minHeight: 800,
+    icon: getIconPath(),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       nodeIntegration: false,
@@ -34,6 +41,10 @@ app.whenReady().then(() => {
   ipcMain.handle('save-data', async (_event, data: Record<string, string>) => {
     await saveData(getDataPath(), data)
   })
+
+  if (process.platform === 'darwin' && !app.isPackaged) {
+    app.dock?.setIcon(getIconPath())
+  }
 
   createWindow()
 
