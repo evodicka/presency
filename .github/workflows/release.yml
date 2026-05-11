@@ -77,7 +77,7 @@ jobs:
       - run: npm run build
 
       - name: Package with electron-builder
-        run: npx electron-builder ${{ matrix.build_flag }}
+        run: npx electron-builder ${{ matrix.build_flag }} --publish never
 
       - name: Upload artifact to release
         env:
