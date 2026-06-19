@@ -38,7 +38,7 @@ app.whenReady().then(() => {
     return loadData(getDataPath())
   })
 
-  ipcMain.handle('save-data', async (_event, data: Record<string, string>) => {
+  ipcMain.handle('save-data', async (_event, data: Record<string, unknown>) => {
     await saveData(getDataPath(), data)
   })
 

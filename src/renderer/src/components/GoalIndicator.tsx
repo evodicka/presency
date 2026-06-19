@@ -1,14 +1,11 @@
 import { GOAL_THRESHOLD_PERCENT } from '../services/workingTimeCalculator'
+import { formatHours } from '../utils/formatHours'
 
 interface GoalIndicatorProps {
   onSitePercentage: number
   onSiteHours: number
   targetOnSiteHours: number
   hoursToGoal: number
-}
-
-function formatHours(hours: number): string {
-  return `${hours.toFixed(1).replace(/\.0$/, '')}h`
 }
 
 function GoalIndicator({
