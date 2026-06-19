@@ -1,5 +1,10 @@
 export type DayStatus = 'home-office' | 'on-site' | 'absent'
 
+export interface DayEntry {
+  status: DayStatus
+  hours: number
+}
+
 export interface MonthStats {
   totalWorkingDays: number
   totalWorkingHours: number

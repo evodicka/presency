@@ -58,4 +58,14 @@ describe('PersistenceHandler', () => {
     const loaded = await loadData(dataPath)
     expect(loaded).toEqual({})
   })
+
+  it('roundtrips object entries (on-site with non-default hours)', async () => {
+    const testData = {
+      '2026-04-07': { status: 'on-site', hours: 6.5 },
+      '2026-04-15': 'absent'
+    }
+    await saveData(dataPath, testData)
+    const loaded = await loadData(dataPath)
+    expect(loaded).toEqual(testData)
+  })
 })

@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'fs/promises'
 
-export async function loadData(filePath: string): Promise<Record<string, string>> {
+export async function loadData(filePath: string): Promise<Record<string, unknown>> {
   try {
     const raw = await readFile(filePath, 'utf-8')
     return JSON.parse(raw)
@@ -9,6 +9,6 @@ export async function loadData(filePath: string): Promise<Record<string, string>
   }
 }
 
-export async function saveData(filePath: string, data: Record<string, string>): Promise<void> {
+export async function saveData(filePath: string, data: Record<string, unknown>): Promise<void> {
   await writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8')
 }

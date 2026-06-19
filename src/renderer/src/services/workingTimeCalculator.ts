@@ -1,4 +1,4 @@
-import type { DayStatus, MonthStats } from '../types'
+import type { DayEntry, MonthStats } from '../types'
 
 export const GOAL_THRESHOLD_PERCENT = 40
 export const HOURS_PER_WORKING_DAY = 8
@@ -6,7 +6,7 @@ export const HOURS_PER_WORKING_DAY = 8
 export function calculateMonthStats(
   year: number,
   month: number, // 1-indexed: 1 = January
-  dayStatuses: Record<string, DayStatus>,
+  dayEntries: Record<string, DayEntry>,
   holidays: Set<string>
 ): MonthStats {
   const daysInMonth = new Date(year, month, 0).getDate()
@@ -15,6 +15,7 @@ export function calculateMonthStats(
   let onSiteDays = 0
   let homeOfficeDays = 0
   let absentDays = 0
+  let onSiteHours = 0
 
   for (let day = 1; day <= daysInMonth; day++) {
     const date = new Date(year, month - 1, day)
@@ -29,11 +30,13 @@ export function calculateMonthStats(
 
     totalWorkingDays++
 
-    const status: DayStatus = dayStatuses[dateStr] || 'home-office'
+    const entry = dayEntries[dateStr]
+    const status = entry?.status ?? 'home-office'
 
     switch (status) {
       case 'on-site':
         onSiteDays++
+        onSiteHours += entry?.hours ?? HOURS_PER_WORKING_DAY
         break
       case 'absent':
         absentDays++
@@ -44,13 +47,12 @@ export function calculateMonthStats(
     }
   }
 
-  const effectiveDays = onSiteDays + homeOfficeDays
-  const onSitePercentage = effectiveDays > 0 ? (onSiteDays / effectiveDays) * 100 : 0
-  const homeOfficePercentage = effectiveDays > 0 ? (homeOfficeDays / effectiveDays) * 100 : 0
+  const homeOfficeHours = homeOfficeDays * HOURS_PER_WORKING_DAY
+  const effectiveHours = onSiteHours + homeOfficeHours
+  const onSitePercentage = effectiveHours > 0 ? (onSiteHours / effectiveHours) * 100 : 0
+  const homeOfficePercentage = effectiveHours > 0 ? (homeOfficeHours / effectiveHours) * 100 : 0
 
-  const onSiteHours = onSiteDays * HOURS_PER_WORKING_DAY
-  const targetOnSiteHours =
-    (GOAL_THRESHOLD_PERCENT / 100) * effectiveDays * HOURS_PER_WORKING_DAY
+  const targetOnSiteHours = (GOAL_THRESHOLD_PERCENT / 100) * effectiveHours
   const hoursToGoal = Math.max(0, targetOnSiteHours - onSiteHours)
 
   return {

@@ -1,4 +1,5 @@
-import type { DayStatus } from '../types'
+import type { DayStatus, DayEntry } from '../types'
+import { HOURS_PER_WORKING_DAY } from '../services/workingTimeCalculator'
 import MonthNavigator from './MonthNavigator'
 import DayCell from './DayCell'
 import StatusLegend from './StatusLegend'
@@ -6,11 +7,12 @@ import StatusLegend from './StatusLegend'
 interface CalendarViewProps {
   year: number
   month: number // 1-indexed
-  dayStatuses: Record<string, DayStatus>
+  dayEntries: Record<string, DayEntry>
   holidays: Set<string>
   onPrevMonth: () => void
   onNextMonth: () => void
   onStatusChange: (date: string) => void
+  onAdjustHours: (date: string, delta: number) => void
 }
 
 interface DayInfo {
@@ -20,6 +22,7 @@ interface DayInfo {
   isHoliday: boolean
   isAdjacentMonth: boolean
   status: DayStatus
+  hours: number
 }
 
 const DAY_HEADERS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -31,7 +34,7 @@ function formatDateStr(year: number, month: number, day: number): string {
 function buildCalendarGrid(
   year: number,
   month: number,
-  dayStatuses: Record<string, DayStatus>,
+  dayEntries: Record<string, DayEntry>,
   holidays: Set<string>
 ): DayInfo[][] {
   const firstDay = new Date(year, month - 1, 1)
@@ -60,7 +63,8 @@ function buildCalendarGrid(
         isWeekend: dow === 0 || dow === 6,
         isHoliday: holidays.has(dateStr),
         isAdjacentMonth: true,
-        status: 'home-office'
+        status: 'home-office',
+        hours: HOURS_PER_WORKING_DAY
       })
     }
   }
@@ -71,7 +75,9 @@ function buildCalendarGrid(
     const dow = new Date(year, month - 1, day).getDay()
     const isWeekend = dow === 0 || dow === 6
     const isHoliday = holidays.has(dateStr)
-    const status: DayStatus = dayStatuses[dateStr] || 'home-office'
+    const entry = dayEntries[dateStr]
+    const status: DayStatus = entry?.status ?? 'home-office'
+    const hours = entry?.hours ?? HOURS_PER_WORKING_DAY
 
     currentWeek.push({
       date: dateStr,
@@ -79,7 +85,8 @@ function buildCalendarGrid(
       isWeekend,
       isHoliday,
       isAdjacentMonth: false,
-      status
+      status,
+      hours
     })
 
     if (currentWeek.length === 7) {
@@ -102,7 +109,8 @@ function buildCalendarGrid(
         isWeekend: dow === 0 || dow === 6,
         isHoliday: holidays.has(dateStr),
         isAdjacentMonth: true,
-        status: 'home-office'
+        status: 'home-office',
+        hours: HOURS_PER_WORKING_DAY
       })
       day++
     }
@@ -112,8 +120,8 @@ function buildCalendarGrid(
   return weeks
 }
 
-function CalendarView({ year, month, dayStatuses, holidays, onPrevMonth, onNextMonth, onStatusChange }: CalendarViewProps): JSX.Element {
-  const weeks = buildCalendarGrid(year, month, dayStatuses, holidays)
+function CalendarView({ year, month, dayEntries, holidays, onPrevMonth, onNextMonth, onStatusChange, onAdjustHours }: CalendarViewProps): JSX.Element {
+  const weeks = buildCalendarGrid(year, month, dayEntries, holidays)
 
   return (
     <div className="calendar-card">
@@ -133,10 +141,12 @@ function CalendarView({ year, month, dayStatuses, holidays, onPrevMonth, onNextM
                 date={day.date}
                 dayNumber={day.dayNumber}
                 status={day.status}
+                hours={day.hours}
                 isWeekend={day.isWeekend}
                 isHoliday={day.isHoliday}
                 isAdjacentMonth={day.isAdjacentMonth}
                 onStatusChange={onStatusChange}
+                onAdjustHours={onAdjustHours}
               />
             ))}
           </div>
