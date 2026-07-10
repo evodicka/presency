@@ -236,19 +236,21 @@ describe('calculateMonthStats', () => {
   // --- New tests for per-day custom hours ---
 
   it('uses actual on-site hours instead of 8 when a custom value is set', () => {
-    // February 2026: 1 on-site day at 6h, 19 home-office → effectiveHours = 6 + 19*8 = 158
+    // February 2026: 20 weekdays, no absences → baseline = 20*8 = 160
+    // 1 on-site day at 6h, 19 home-office
     const entries: Record<string, DayEntry> = {
       '2026-02-02': { status: 'on-site', hours: 6 }
     }
     const stats = calculateMonthStats(2026, 2, entries, new Set())
     expect(stats.onSiteHours).toBe(6)
     expect(stats.onSiteDays).toBe(1)
-    // percentage: 6 / (6 + 19*8) * 100 = 6/158 * 100 ≈ 3.797%
-    expect(stats.onSitePercentage).toBeCloseTo((6 / 158) * 100, 4)
+    // percentage against fixed baseline: 6 / 160 * 100 = 3.75%
+    expect(stats.onSitePercentage).toBeCloseTo((6 / 160) * 100, 4)
   })
 
   it('handles a 0-hour on-site day without division errors', () => {
-    // February 2026: 1 on-site day at 0h, 19 home-office → effectiveHours = 0 + 152 = 152
+    // February 2026: 20 weekdays, no absences → baseline = 160
+    // 1 on-site day at 0h, 19 home-office
     const entries: Record<string, DayEntry> = {
       '2026-02-02': { status: 'on-site', hours: 0 }
     }
@@ -256,14 +258,14 @@ describe('calculateMonthStats', () => {
     expect(stats.onSiteHours).toBe(0)
     expect(stats.onSiteDays).toBe(1)
     expect(stats.onSitePercentage).toBe(0)
-    // hoursToGoal: 0.4 * 152 = 60.8h
-    expect(stats.targetOnSiteHours).toBeCloseTo(60.8, 5)
-    expect(stats.hoursToGoal).toBeCloseTo(60.8, 5)
+    // target/hoursToGoal against fixed baseline: 0.4 * 160 = 64h
+    expect(stats.targetOnSiteHours).toBeCloseTo(64, 5)
+    expect(stats.hoursToGoal).toBeCloseTo(64, 5)
   })
 
   it('computes hours-based percentage correctly with mixed custom-hours on-site days', () => {
-    // February 2026: 1 day at 6h, 1 day at 10h, rest home-office
-    // onSiteHours = 16, homeOfficeHours = 18*8 = 144, effectiveHours = 160
+    // February 2026: 20 weekdays, no absences → baseline = 160
+    // 1 day at 6h, 1 day at 10h, rest home-office. onSiteHours = 16
     const entries: Record<string, DayEntry> = {
       '2026-02-02': { status: 'on-site', hours: 6 },
       '2026-02-03': { status: 'on-site', hours: 10 }
@@ -274,5 +276,35 @@ describe('calculateMonthStats', () => {
     expect(stats.onSitePercentage).toBeCloseTo((16 / 160) * 100, 4)
     expect(stats.targetOnSiteHours).toBeCloseTo(0.4 * 160, 5)
     expect(stats.hoursToGoal).toBeCloseTo(0.4 * 160 - 16, 5)
+  })
+
+  // Regression test for the reported bug: editing a day's actual on-site hours
+  // must not move the goal. The target depends only on day counts (40% of
+  // expected hours minus absences), never on actual hours logged.
+  it('keeps targetOnSiteHours fixed regardless of actual on-site hours logged', () => {
+    // February 2026: 20 weekdays. 5 on-site, 3 absent, 12 home-office either way.
+    const baseEntries: Record<string, DayEntry> = {
+      '2026-02-02': { status: 'on-site', hours: 8 },
+      '2026-02-03': { status: 'on-site', hours: 8 },
+      '2026-02-04': { status: 'on-site', hours: 8 },
+      '2026-02-05': { status: 'on-site', hours: 8 },
+      '2026-02-06': { status: 'on-site', hours: 8 },
+      '2026-02-09': entry('absent'),
+      '2026-02-10': entry('absent'),
+      '2026-02-11': entry('absent')
+    }
+    const editedEntries: Record<string, DayEntry> = {
+      ...baseEntries,
+      '2026-02-02': { status: 'on-site', hours: 20 }
+    }
+
+    const statsBefore = calculateMonthStats(2026, 2, baseEntries, new Set())
+    const statsAfter = calculateMonthStats(2026, 2, editedEntries, new Set())
+
+    // Goal is unchanged by the hours edit.
+    expect(statsAfter.targetOnSiteHours).toBe(statsBefore.targetOnSiteHours)
+    // But actual progress toward that goal does change.
+    expect(statsAfter.onSiteHours).not.toBe(statsBefore.onSiteHours)
+    expect(statsAfter.hoursToGoal).not.toBe(statsBefore.hoursToGoal)
   })
 })
