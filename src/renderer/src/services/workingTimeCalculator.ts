@@ -47,12 +47,14 @@ export function calculateMonthStats(
     }
   }
 
+  // Fixed baseline of expected hours: 40% goal and percentage are both computed
+  // against this, so the target never moves when a day's actual hours are edited.
+  const baselineHours = (totalWorkingDays - absentDays) * HOURS_PER_WORKING_DAY
   const homeOfficeHours = homeOfficeDays * HOURS_PER_WORKING_DAY
-  const effectiveHours = onSiteHours + homeOfficeHours
-  const onSitePercentage = effectiveHours > 0 ? (onSiteHours / effectiveHours) * 100 : 0
-  const homeOfficePercentage = effectiveHours > 0 ? (homeOfficeHours / effectiveHours) * 100 : 0
+  const onSitePercentage = baselineHours > 0 ? (onSiteHours / baselineHours) * 100 : 0
+  const homeOfficePercentage = baselineHours > 0 ? (homeOfficeHours / baselineHours) * 100 : 0
 
-  const targetOnSiteHours = (GOAL_THRESHOLD_PERCENT / 100) * effectiveHours
+  const targetOnSiteHours = (GOAL_THRESHOLD_PERCENT / 100) * baselineHours
   const hoursToGoal = Math.max(0, targetOnSiteHours - onSiteHours)
 
   return {
